@@ -1,5 +1,6 @@
 import Product from "../models/Product";
 import Joi  from "@hapi/joi";
+import { storage } from "../libs/storage";
 
 const schemaCreate = Joi.object({
   name: Joi.string().min(6).max(255).required(),
@@ -24,21 +25,49 @@ export const createProduct = async (req,res)=>{
             {error: error.details[0].message}
         )
     }
-    const { name, category, price, imgURL } = req.body;
-    try {
-        const newProduct = new Product({
-          name,
-          category,
-          price,
-          imgURL,
-        });
     
-        const productSaved = await newProduct.save();
-    
-        res.status(201).json(productSaved);
-      } catch (error) {
-         console.log(error);
-         return res.status(500).json(error);
+    const { name, category, price } = req.body;
+
+    if(req.files){
+      const resp= await storage(req.files,"imgURL",['.png','.jpg','.jpeg']);
+      if(resp.isok==false) {
+        return res.status(400).json(
+          {error: resp.error}
+      )
+      }
+      const nombreExpediente = resp.newName;
+      
+      try {
+          const newProduct = new Product({
+            name,
+            category,
+            price,
+            imgURL: nombreExpediente
+          });
+      
+          const productSaved = await newProduct.save();
+      
+          res.status(201).json(productSaved);
+        } catch (error) {
+          console.log(error);
+          return res.status(500).json(error);
+        }
+      }else{
+        
+        try {
+            const newProduct = new Product({
+              name,
+              category,
+              price
+            });
+        
+            const productSaved = await newProduct.save();
+        
+            res.status(201).json(productSaved);
+          } catch (error) {
+            console.log(error);
+            return res.status(500).json(error);
+          }
       }
 }
 

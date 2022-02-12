@@ -5,7 +5,10 @@ import Role from "../models/Role";
 require('dotenv').config()
 
 export const verifyToken = async (req, res, next) => {
-  const token = req.headers["x-access-token"];
+  //const token = req.headers["x-access-token"];
+  const authHeader= req.headers['authorization'];
+  const bearerToken = authHeader.split(" ");
+  const token = bearerToken[1];
 
   if (!token) return res.status(403).json({ message: "No token provided" });
 

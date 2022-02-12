@@ -3,7 +3,8 @@ import  path  from "path";
 export const storage = async (files,fileName,allowedExtension) => {
     const file = files[fileName];
     const resp = {isok:false,error:null,newName: null};
-    const extensionName = path.extname(file.name);
+    const extensionName = path.extname(file.name).toLowerCase();
+    
     if(allowedExtension.includes(extensionName)){
         const now = Date.parse(Date());
         resp.newName = now + extensionName;

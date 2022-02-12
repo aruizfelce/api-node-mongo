@@ -33,16 +33,15 @@ export const createProduct = async (req,res)=>{
       if(resp.isok==false) {
         return res.status(400).json(
           {error: resp.error}
-      )
+        )
       }
-      const nombreExpediente = resp.newName;
-      
+      const newFileName = resp.newName;
       try {
           const newProduct = new Product({
             name,
             category,
             price,
-            imgURL: nombreExpediente
+            imgURL: "/src/storage/imgs/" + newFileName
           });
       
           const productSaved = await newProduct.save();
@@ -91,12 +90,23 @@ export const createProduct = async (req,res)=>{
             {error: error.details[0].message}
         )
     }
-    const updatedProduct = await Product.findByIdAndUpdate(
-      req.params.productId,
-      req.body,
-      {
-        new: true,
+
+    if(req.files){
+      const resp= await storage(req.files,"imgURL",['.png','.jpg','.jpeg']);
+      if(resp.isok==false) {
+        return res.status(400).json(
+          {error: resp.error}
+        )
       }
+      const newFileName = resp.newName;
+      req.body.imgURL = "/src/storage/imgs/" + newFileName
+    }
+      const updatedProduct = await Product.findByIdAndUpdate(
+        req.params.productId,
+        req.body,
+        {
+          new: true,
+        }
     );
     res.status(200).json(updatedProduct);
   };

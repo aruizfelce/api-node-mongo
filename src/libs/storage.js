@@ -7,15 +7,13 @@ export const storage = async (files,fileName,allowedExtension) => {
     if(allowedExtension.includes(extensionName)){
         const now = Date.parse(Date());
         resp.newName = now + extensionName;
-        resp.error = await file.mv("./storage/imgs/" + resp.newName);
+        resp.error = await file.mv("./src/storage/imgs/" + resp.newName);
 
         if(resp.error){
-            console.log(resp);
             return resp;
         }
         else{ 
                 resp.isok = true;
-                console.log(resp);
                 return resp;
             }
     }else{

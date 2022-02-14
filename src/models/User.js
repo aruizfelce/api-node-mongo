@@ -21,6 +21,12 @@ const userSchema = new Schema(
         ref: "Role", //Para enlazar con el modelo Roles
       },
     ],
+    resetToken: {
+      type: String
+    },
+    refreshToken: {
+      type: String
+    },
   },
   {
     timestamps: true,

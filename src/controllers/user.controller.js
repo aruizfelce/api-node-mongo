@@ -1,5 +1,6 @@
 import User from "../models/User";
 import Role from "../models/Role";
+import  mongoose  from "mongoose";
 
 export const createUser = async (req, res) => {
   try {
@@ -32,6 +33,36 @@ export const createUser = async (req, res) => {
   }
 };
 
-export const getUsers = async (req, res) => {};
+export const getUsers = async (req, res) => {
+  try {
+    const users = await User.find();
+    return res.json(users);
+  } catch (error) {
+    return res.json(400).json({message:"Ha ocurrido un error"})
+  }
+  
+};
 
-export const getUser = async (req, res) => {};
+export const getUser = async (req, res) => {
+  const  {userId}  = req.params;
+  if(!mongoose.Types.ObjectId.isValid(userId)) return res.status(401).json({message:"Id inválido"});
+  try {
+    const userFound = await User.findById(userId,"username email roles");
+    if (!userFound) return res.status(400).json({ message: "User Not Found" }); 
+    return res.json(userFound)
+ } catch (error) {
+   return res.json({message: "Ha ocurrido un error"})
+ }
+};
+
+export const deleteUser = async (req, res) => {
+  const  {userId}  = req.params;
+  if(!mongoose.Types.ObjectId.isValid(userId)) return res.status(401).json({message:"Id inválido"});
+  try {
+    const userFound = await User.findByIdAndDelete(userId);
+    if (!userFound) return res.status(400).json({ message: "User Not Found" }); 
+    return res.json(userFound)
+ } catch (error) {
+   return res.json({message: "Ha ocurrido un error"})
+ }
+};

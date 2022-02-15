@@ -71,15 +71,24 @@ export const createProduct = async (req,res)=>{
 }
 
   export const getProducts = async (req, res) => {
-    const products = await Product.find();
-    return res.json(products);
+    try {
+      const products = await Product.find();
+      return res.json(products);
+    } catch (error) {
+      return res.status(400).json({message:"Ha ocurrido un error"})
+    }
+    
   };
 
   export const getProductById = async (req, res) => {
-    const { productId } = req.params;
-  
-    const product = await Product.findById(productId);
-    res.status(200).json(product);
+    try {
+      const { productId } = req.params;
+      const product = await Product.findById(productId);
+      return res.json(product);
+    } catch (error) {
+      return res.status(400).json({message:"Ha ocurrido un error"})
+    }
+    
   };
 
   export const updateProductById = async (req, res) => {

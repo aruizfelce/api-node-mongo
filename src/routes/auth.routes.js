@@ -6,6 +6,7 @@ import { verifySignup } from "../middlewares";
 
 router.post('/signup',[verifySignup.checkDuplicateUsernameOrEmail, verifySignup.checkRolesExisted], authCtrl.signUp);
 router.post('/signin', authCtrl.signIn);
+router.put('/change-password', authCtrl.changePassword);
 router.put('/forgot-password', authCtrl.forgotPassword);
 router.put('/new-password', authCtrl.createNewPassword);
 router.post('/refresh-token', authCtrl.refreshToken);

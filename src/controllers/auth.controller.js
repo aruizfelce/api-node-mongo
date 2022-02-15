@@ -118,6 +118,39 @@ export const signIn = async (req, res) => {
       }
 }
 
+export const changePassword = async (req, res) => {
+  const { email, oldPassword, newPassword} = req.body;
+  
+  if(!(email && oldPassword && newPassword)){
+    return res.status(400).json({message: "El email, passord anterior y nuevo son necesarios"});
+  }
+  try {
+    const userFound = await User.findOne({email});
+    
+    const matchPassword = await User.comparePassword(
+      oldPassword,
+      userFound.password
+    );
+
+    if (!matchPassword)
+          return res.status(401).json({
+            token: null,
+            message: "Invalid Password",
+          });
+    
+    const passEncr= await User.encryptPassword(newPassword);
+    userFound.password = passEncr;
+    await userFound.save();
+ 
+    return res.json({message: "Se cambió la contraseña"});
+ 
+  } catch (error) {
+      res.status(400).json({message: "Ha ocurrido un error"})
+  }
+  
+
+}
+
 export const forgotPassword = async (req, res) => {
   const {email} = req.body;
   let verificationLink;
@@ -140,7 +173,7 @@ export const forgotPassword = async (req, res) => {
     verificationLink = process.env.URL + token;
     userFound.resetToken = token; //agrego el token al usuario
      
-    userFound.save();
+    await userFound.save();
     
   } catch (error) {
       return res.json({message,emailStatus})

@@ -18,7 +18,7 @@ const userSchema = new Schema(
     roles: [
       {
         type: Schema.Types.ObjectId, //Va a almacenar el Id del rol
-        ref: "Role", //Para enlazar con el modelo Roles
+        ref: ["Role","El Rol no es válido"], //Para enlazar con el modelo Roles
       },
     ],
     resetToken: {

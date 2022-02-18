@@ -1,31 +1,9 @@
 import Product from "../models/Product";
-import Joi  from "@hapi/joi";
 import { storage } from "../libs/storage";
 
-const schemaCreate = Joi.object({
-  name: Joi.string().min(6).max(255).required(),
-  category: Joi.string().min(6).max(255).required(),
-  price: Joi.number().required(),
-  imgURL: Joi.string().min(6).max(255)
-});
-
-const schemaUpdate = Joi.object({
-  name: Joi.string().min(6).max(255),
-  category: Joi.string().min(6).max(255),
-  price: Joi.number(),
-  imgURL: Joi.string().min(6).max(255)
-});
 
 export const createProduct = async (req,res)=>{
-    // validar producto
-    const { error } = schemaCreate.validate(req.body)
-    
-    if (error) {
-        return res.status(400).json(
-            {error: error.details[0].message}
-        )
-    }
-    
+   
     const { name, category, price } = req.body;
 
     if(req.files){
@@ -59,9 +37,7 @@ export const createProduct = async (req,res)=>{
               category,
               price
             });
-        
             const productSaved = await newProduct.save();
-        
             res.status(201).json(productSaved);
           } catch (error) {
             console.log(error);
@@ -92,14 +68,6 @@ export const createProduct = async (req,res)=>{
   };
 
   export const updateProductById = async (req, res) => {
-    const { error } = schemaUpdate.validate(req.body)
-    
-    if (error) {
-        return res.status(400).json(
-            {error: error.details[0].message}
-        )
-    }
-
     if(req.files){
       const resp= await storage(req.files,"imgURL",['.png','.jpg','.jpeg']);
       if(resp.isok==false) {

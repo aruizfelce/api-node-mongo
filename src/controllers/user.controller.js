@@ -65,4 +65,20 @@ export const deleteUser = async (req, res) => {
  } catch (error) {
    return res.json({message: "Ha ocurrido un error"})
  }
-};
+
+}
+
+export const updateUser = async (req, res) => {
+  const  {userId}  = req.params;
+  if(!mongoose.Types.ObjectId.isValid(userId)) return res.status(401).json({message:"Id inválido"});
+  try {
+    const userFound = await User.findByIdAndUpdate(userId,req.body,
+      {
+        new: true,
+      });
+    if (!userFound) return res.status(400).json({ message: "User Not Found" }); 
+    return res.json(userFound)
+ } catch (error) {
+   return res.json({message: "Ha ocurrido un error"})
+ }
+}

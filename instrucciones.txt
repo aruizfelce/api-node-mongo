@@ -2,10 +2,16 @@ npm init --yes  para crear package.json
 
 npm i express bcryptjs cors dotenv jsonwebtoken mongoose 
 
-npm install --save multer (para las imágenes)
+npm i @hapi/joi (Validaciones)
+
+npm i nodemailer (Enviar correos)
+
+npm i multer express-fileupload(Para subir archivos)
+
+npm install --save multer (para las imï¿½genes)
 
 npm i @babel/core @babel/cli @babel/node @babel/preset-env nodemon -D
 
 cd src
 
-mkdir controller libs middlewares models routes
+mkdir controllers libs middlewares models routes schemas

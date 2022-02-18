@@ -7,6 +7,9 @@ require('dotenv').config()
 export const verifyToken = async (req, res, next) => {
   //const token = req.headers["x-access-token"];
   const authHeader= req.headers['authorization'];
+  
+  if (!authHeader) return res.status(403).json({ message: "No token provided" });
+
   const bearerToken = authHeader.split(" ");
   const token = bearerToken[1];
 

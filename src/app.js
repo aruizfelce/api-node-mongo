@@ -2,6 +2,7 @@ import express from "express";
 import pkg from "../package.json"
 import fileupload from "express-fileupload";
 import productsRoutes from "./routes/products.routes";
+import categoriesRoutes from './routes/categories.routes';
 import authRoutes from "./routes/auth.routes";
 import usersRoutes from "./routes/user.routes";
 import { createRoles } from "./libs/initialSetup";
@@ -35,6 +36,7 @@ app.get('/',(req,res)=>{
 });
 
 app.use('/api/products',productsRoutes);
+app.use('/api/categories',categoriesRoutes);
 app.use('/api/auth',authRoutes);
 app.use("/api/users", usersRoutes);
 

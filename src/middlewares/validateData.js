@@ -1,6 +1,7 @@
 import {schemaCreateProduct,schemaUpdateProduct} from "../schemas/products.schema";
 import {schemaCreateUser,schemaUpdateUser} from "../schemas/users.schema";
 import {schemaRegister,schemaLogin} from "../schemas/auth.schema";
+import {schemaCreateCategory,schemaUpdateCategory} from "../schemas/category.schema";
 
 export const validateCreateProduct = async (req, res, next) => {
     try {
@@ -14,6 +15,24 @@ export const validateCreateProduct = async (req, res, next) => {
   export const validateUpdateProduct = async (req, res, next) => {
     try {
         await schemaUpdateProduct.validateAsync(req.body);
+    } catch (error) {
+        return res.status(400).json({error:error.details[0].message});
+    }
+    next();
+ } 
+
+ export const validateCreateCategory = async (req, res, next) => {
+    try {
+        await schemaCreateCategory.validateAsync(req.body);
+    } catch (error) {
+        return res.status(400).json({error:error.details[0].message});
+    }
+    next();
+ }
+
+  export const validateUpdateCategory = async (req, res, next) => {
+    try {
+        await schemaUpdateCategory.validateAsync(req.body);
     } catch (error) {
         return res.status(400).json({error:error.details[0].message});
     }

@@ -1,11 +1,11 @@
 import Product from "../models/Product";
 import { storage } from "../libs/storage";
+import Category from "../models/Category";
 
 
 export const createProduct = async (req,res)=>{
    
     const { name, category, price } = req.body;
-
     if(req.files){
       const resp= await storage(req.files,"imgURL",['.png','.jpg','.jpeg']);
       if(resp.isok==false) {
@@ -21,7 +21,10 @@ export const createProduct = async (req,res)=>{
             price,
             imgURL: "/src/storage/imgs/" + newFileName
           });
-      
+           // checking for category
+          const foundCategory = await Category.find({ name: { $in: category } });
+          newProduct.category = foundCategory._id;
+
           const productSaved = await newProduct.save();
       
           res.status(201).json(productSaved);
@@ -37,6 +40,10 @@ export const createProduct = async (req,res)=>{
               category,
               price
             });
+            // checking for category
+            const foundCategory = await Category.find({ name: { $in: category } });
+            newProduct.category = foundCategory.map((cat) => cat._id);
+
             const productSaved = await newProduct.save();
             res.status(201).json(productSaved);
           } catch (error) {
@@ -48,7 +55,7 @@ export const createProduct = async (req,res)=>{
 
   export const getProducts = async (req, res) => {
     try {
-      const products = await Product.find();
+      const products = await Product.find().populate('category').select('name price category');
       return res.json(products);
     } catch (error) {
       return res.status(400).json({message:"Ha ocurrido un error"})
@@ -59,7 +66,7 @@ export const createProduct = async (req,res)=>{
   export const getProductById = async (req, res) => {
     try {
       const { productId } = req.params;
-      const product = await Product.findById(productId);
+      const product = await Product.findById(productId).select('name price category imgURL');
       return res.json(product);
     } catch (error) {
       return res.status(400).json({message:"Ha ocurrido un error"})

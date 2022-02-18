@@ -35,7 +35,7 @@ export const createUser = async (req, res) => {
 
 export const getUsers = async (req, res) => {
   try {
-    const users = await User.find();
+    const users = await User.find().select('username email roles');
     return res.json(users);
   } catch (error) {
     return res.json(400).json({message:"Ha ocurrido un error"})
@@ -47,7 +47,7 @@ export const getUser = async (req, res) => {
   const  {userId}  = req.params;
   if(!mongoose.Types.ObjectId.isValid(userId)) return res.status(401).json({message:"Id inválido"});
   try {
-    const userFound = await User.findById(userId,"username email roles");
+    const userFound = await User.findById(userId).select("username email roles");
     if (!userFound) return res.status(400).json({ message: "User Not Found" }); 
     return res.json(userFound)
  } catch (error) {

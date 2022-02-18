@@ -73,7 +73,7 @@ export const signIn = async (req, res) => {
           roles: userFound.roles
         }, 
         process.env.TOKEN_SECRET, {
-        expiresIn: '1h', // 24 hours
+        expiresIn: '4h', // 24 hours
       });
 
       const refreshToken = jwt.sign(
